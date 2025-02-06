@@ -24,7 +24,7 @@ function startNewGame() {
 
     colorOptions.forEach((button, index) => {
         button.style.backgroundColor = colors[index];
-        button.onclick = () => checkGuess(colors[index]);
+        button.onclick = () => checkGuess(button, colors[index]);
     });
 
     statusText.textContent = "Make a guess!";
@@ -32,7 +32,7 @@ function startNewGame() {
 }
 
 // Function to check the user's guess
-function checkGuess(selectedColor) {
+function checkGuess(button, selectedColor) {
     if (selectedColor === targetColor) {
         statusText.textContent = "Correct! 🎉";
         statusText.style.color = "green";
@@ -45,6 +45,15 @@ function checkGuess(selectedColor) {
         scoreDisplay.textContent = score;
         statusText.textContent = `Wrong! ❌ (-1)`;
         statusText.style.color = "red";
+
+        // Change the wrong color button to a new random color
+        let newColor;
+        do {
+            newColor = getRandomColor();
+        } while (newColor === selectedColor || newColor === targetColor); // Avoid repeating colors
+
+        button.style.backgroundColor = newColor;
+        button.onclick = () => checkGuess(button, newColor); // Update the event handler
 
         if (score < 0) {
             statusText.textContent = "Game Over! Restarting...";
